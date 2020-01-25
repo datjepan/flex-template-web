@@ -115,13 +115,42 @@ export const daysBetween = (startDate, endDate) => {
 };
 
 /**
- * Format the given date
+ * Calculate the number of minutes between the given dates
+ *
+ * @param {Date} startDate start of the time period
+ * @param {Date} endDate end of the time period.
+ *
+ * @throws Will throw if the end date is before the start date
+ * @returns {Number} number of minutes between the given Date objects
+ */
+export const minutesBetween = (startDate, endDate) => {
+  const minutes = moment(endDate).diff(startDate, 'minutes');
+  if (minutes < 0) {
+    throw new Error('End Date cannot be before start Date');
+  }
+  return minutes;
+};
+
+/**
+ * Format the given date to month id/string
  *
  * @param {Date} date to be formatted
  *
  * @returns {String} formatted month string
  */
 export const monthIdString = date => moment(date).format('YYYY-MM');
+
+/**
+ * Format the given date to UTC month id/string
+ *
+ * @param {Date} date to be formatted
+ *
+ * @returns {String} formatted month string
+ */
+export const monthIdStringInUTC = date =>
+  moment(date)
+    .utc()
+    .format('YYYY-MM');
 
 /**
  * Format the given date
@@ -137,7 +166,10 @@ export const formatDate = (intl, todayString, d) => {
   if (!paramsValid) {
     throw new Error(`Invalid params for formatDate: (${intl}, ${todayString}, ${d})`);
   }
-  const now = moment(intl.now());
+
+  // By default we can use moment() directly but in tests we need to use a specific dates.
+  // fakeIntl used in tests contains now() function wich returns predefined date
+  const now = intl.now ? moment(intl.now()) : moment();
   const formattedTime = intl.formatTime(d);
   let formattedDate;
 
@@ -224,4 +256,21 @@ export const getExclusiveEndDate = dateString => {
     .add(1, 'days')
     .startOf('day')
     .toDate();
+};
+
+export const formatDateToText = (intl, date) => {
+  return {
+    date: intl.formatDate(date, {
+      month: 'short',
+      day: 'numeric',
+    }),
+    time: intl.formatDate(date, {
+      hour: 'numeric',
+      minute: 'numeric',
+    }),
+    dateAndTime: intl.formatTime(date, {
+      month: 'short',
+      day: 'numeric',
+    }),
+  };
 };

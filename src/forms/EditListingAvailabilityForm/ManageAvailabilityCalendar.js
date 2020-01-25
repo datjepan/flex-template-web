@@ -6,7 +6,7 @@ import {
   isInclusivelyBeforeDay,
   isInclusivelyAfterDay,
 } from 'react-dates';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage } from '../../util/reactIntl';
 import memoize from 'lodash/memoize';
 import classNames from 'classnames';
 import moment from 'moment';
@@ -15,8 +15,8 @@ import {
   ensureAvailabilityException,
   ensureDayAvailabilityPlan,
 } from '../../util/data';
-import { DAYS_OF_WEEK } from '../../util/types';
-import { monthIdString } from '../../util/dates';
+import { DAYS_OF_WEEK, propTypes } from '../../util/types';
+import { monthIdString, monthIdStringInUTC } from '../../util/dates';
 import { IconArrowHead, IconSpinner } from '../../components';
 
 import css from './ManageAvailabilityCalendar.css';
@@ -137,9 +137,10 @@ const findException = (exceptions, day) => {
 
 const isBlocked = (availabilityPlan, exception, date) => {
   const planEntries = ensureDayAvailabilityPlan(availabilityPlan).entries;
-  const seatsFromPlan = planEntries.find(
+  const planEntry = planEntries.find(
     weekDayEntry => weekDayEntry.dayOfWeek === DAYS_OF_WEEK[date.isoWeekday() - 1]
-  ).seats;
+  );
+  const seatsFromPlan = planEntry ? planEntry.seats : 0;
 
   const seatsFromException =
     exception && ensureAvailabilityException(exception.availabilityException).attributes.seats;
@@ -162,7 +163,9 @@ const dateModifiers = (availabilityPlan, exceptions, bookings, date) => {
 };
 
 const renderDayContents = (calendar, availabilityPlan) => date => {
-  const { exceptions = [], bookings = [] } = calendar[monthIdString(date)] || {};
+  // This component is for day/night based processes. If time-based process is used,
+  // you might want to deal with local dates using monthIdString instead of monthIdStringInUTC.
+  const { exceptions = [], bookings = [] } = calendar[monthIdStringInUTC(date)] || {};
   const { isOutsideRange, isSameDay, isBlocked, isBooked, isInProgress, isFailed } = dateModifiers(
     availabilityPlan,
     exceptions,
@@ -308,7 +311,9 @@ class ManageAvailabilityCalendar extends Component {
 
     const { availabilityPlan, availability } = this.props;
     const calendar = availability.calendar;
-    const { exceptions = [], bookings = [] } = calendar[monthIdString(date)] || {};
+    // This component is for day/night based processes. If time-based process is used,
+    // you might want to deal with local dates using monthIdString instead of monthIdStringInUTC.
+    const { exceptions = [], bookings = [] } = calendar[monthIdStringInUTC(date)] || {};
     const { isPast, isBlocked, isBooked, isInProgress } = dateModifiers(
       availabilityPlan,
       exceptions,
@@ -506,6 +511,7 @@ ManageAvailabilityCalendar.propTypes = {
     onDeleteAvailabilityException: func.isRequired,
     onCreateAvailabilityException: func.isRequired,
   }).isRequired,
+  availabilityPlan: propTypes.availabilityPlan.isRequired,
   onMonthChanged: func,
 };
 

@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { Component } from 'react';
 import { array, arrayOf, bool, func, shape, string, oneOf } from 'prop-types';
-import { FormattedMessage, intlShape, injectIntl } from 'react-intl';
+import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -27,6 +27,7 @@ import {
 import { richText } from '../../util/richText';
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/UI.duck';
+import { initializeCardPaymentData } from '../../ducks/stripe.duck.js';
 import {
   Page,
   NamedLink,
@@ -45,9 +46,9 @@ import SectionImages from './SectionImages';
 import SectionAvatar from './SectionAvatar';
 import SectionHeading from './SectionHeading';
 import SectionDescriptionMaybe from './SectionDescriptionMaybe';
-import SectionFeatures from './SectionFeatures';
+import SectionFeaturesMaybe from './SectionFeaturesMaybe';
 import SectionReviews from './SectionReviews';
-import SectionHost from './SectionHost';
+import SectionHostMaybe from './SectionHostMaybe';
 import SectionRulesMaybe from './SectionRulesMaybe';
 import SectionMapMaybe from './SectionMapMaybe';
 import css from './ListingPage.css';
@@ -90,7 +91,13 @@ export class ListingPageComponent extends Component {
   }
 
   handleSubmit(values) {
-    const { history, getListing, params, useInitialValues } = this.props;
+    const {
+      history,
+      getListing,
+      params,
+      callSetInitialValues,
+      onInitializeCardPaymentData,
+    } = this.props;
     const listingId = new UUID(params.id);
     const listing = getListing(listingId);
 
@@ -103,12 +110,16 @@ export class ListingPageComponent extends Component {
         bookingStart: bookingDates.startDate,
         bookingEnd: bookingDates.endDate,
       },
+      confirmPaymentError: null,
     };
 
     const routes = routeConfiguration();
     // Customize checkout page state with current listing and selected bookingDates
     const { setInitialValues } = findRouteByRouteName('CheckoutPage', routes);
-    useInitialValues(setInitialValues, initialValues);
+    callSetInitialValues(setInitialValues, initialValues);
+
+    // Clear previous Stripe errors from store if there is any
+    onInitializeCardPaymentData();
 
     // Redirect to CheckoutPage
     history.push(
@@ -122,14 +133,14 @@ export class ListingPageComponent extends Component {
   }
 
   onContactUser() {
-    const { currentUser, history, useInitialValues, params, location } = this.props;
+    const { currentUser, history, callSetInitialValues, params, location } = this.props;
 
     if (!currentUser) {
       const state = { from: `${location.pathname}${location.search}${location.hash}` };
 
       // We need to log in before showing the modal, but first we need to ensure
       // that modal does open when user is redirected back to this listingpage
-      useInitialValues(setInitialValues, { enquiryModalOpenForListingId: params.id });
+      callSetInitialValues(setInitialValues, { enquiryModalOpenForListingId: params.id });
 
       // signup and return back to listingPage.
       history.push(createResourceLocatorString('SignupPage', routeConfiguration(), {}, {}), state);
@@ -303,7 +314,7 @@ export class ListingPageComponent extends Component {
     const userAndListingAuthorAvailable = !!(currentUser && authorAvailable);
     const isOwnListing =
       userAndListingAuthorAvailable && currentListing.author.id.uuid === currentUser.id.uuid;
-    const showContactUser = !currentUser || (currentUser && !isOwnListing);
+    const showContactUser = authorAvailable && (!currentUser || (currentUser && !isOwnListing));
 
     const currentAuthor = authorAvailable ? currentListing.author : null;
     const ensuredAuthor = ensureUser(currentAuthor);
@@ -416,10 +427,7 @@ export class ListingPageComponent extends Component {
                     onContactUser={this.onContactUser}
                   />
                   <SectionDescriptionMaybe description={description} />
-                  <SectionFeatures
-                    options={amenitiesConfig}
-                    selectedOptions={publicData.amenities}
-                  />
+                  <SectionFeaturesMaybe options={amenitiesConfig} publicData={publicData} />
                   <SectionRulesMaybe publicData={publicData} />
                   <SectionMapMaybe
                     geolocation={geolocation}
@@ -427,7 +435,7 @@ export class ListingPageComponent extends Component {
                     listingId={currentListing.id}
                   />
                   <SectionReviews reviews={reviews} fetchReviewsError={fetchReviewsError} />
-                  <SectionHost
+                  <SectionHostMaybe
                     title={title}
                     listing={currentListing}
                     authorDisplayName={authorDisplayName}
@@ -507,7 +515,7 @@ ListingPageComponent.propTypes = {
   scrollingDisabled: bool.isRequired,
   enquiryModalOpenForListingId: string,
   showListingError: propTypes.error,
-  useInitialValues: func.isRequired,
+  callSetInitialValues: func.isRequired,
   reviews: arrayOf(propTypes.review),
   fetchReviewsError: propTypes.error,
   timeSlots: arrayOf(propTypes.timeSlot),
@@ -515,6 +523,7 @@ ListingPageComponent.propTypes = {
   sendEnquiryInProgress: bool.isRequired,
   sendEnquiryError: propTypes.error,
   onSendEnquiry: func.isRequired,
+  onInitializeCardPaymentData: func.isRequired,
 
   categoriesConfig: array,
   amenitiesConfig: array,
@@ -566,8 +575,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
   onManageDisableScrolling: (componentId, disableScrolling) =>
     dispatch(manageDisableScrolling(componentId, disableScrolling)),
-  useInitialValues: (setInitialValues, values) => dispatch(setInitialValues(values)),
+  callSetInitialValues: (setInitialValues, values) => dispatch(setInitialValues(values)),
   onSendEnquiry: (listingId, message) => dispatch(sendEnquiry(listingId, message)),
+  onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
 });
 
 // Note: it is important that the withRouter HOC is **outside** the

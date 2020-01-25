@@ -104,6 +104,7 @@ propTypes.currentUser = shape({
       abbreviatedName: string.isRequired,
       bio: string,
     }).isRequired,
+    stripeConnected: bool,
   }),
   profileImage: propTypes.image,
 });
@@ -111,6 +112,17 @@ propTypes.currentUser = shape({
 const userAttributes = shape({
   banned: propTypes.value(false).isRequired,
   deleted: propTypes.value(false).isRequired,
+  profile: shape({
+    displayName: string.isRequired,
+    abbreviatedName: string.isRequired,
+    bio: string,
+  }),
+});
+
+// Listing queries can include author.
+// Banned and deleted are not relevant then
+// since banned and deleted users can't have listings.
+const authorAttributes = shape({
   profile: shape({
     displayName: string.isRequired,
     abbreviatedName: string.isRequired,
@@ -130,7 +142,12 @@ const bannedUserAttributes = shape({
 propTypes.user = shape({
   id: propTypes.uuid.isRequired,
   type: propTypes.value('user').isRequired,
-  attributes: oneOfType([userAttributes, deletedUserAttributes, bannedUserAttributes]).isRequired,
+  attributes: oneOfType([
+    userAttributes,
+    authorAttributes,
+    deletedUserAttributes,
+    bannedUserAttributes,
+  ]).isRequired,
   profileImage: propTypes.image,
 });
 
@@ -148,12 +165,12 @@ const LISTING_STATES = [
 
 const listingAttributes = shape({
   title: string.isRequired,
-  description: string.isRequired,
+  description: string,
   geolocation: propTypes.latlng,
-  deleted: propTypes.value(false).isRequired,
-  state: oneOf(LISTING_STATES).isRequired,
+  deleted: propTypes.value(false),
+  state: oneOf(LISTING_STATES),
   price: propTypes.money,
-  publicData: object.isRequired,
+  publicData: object,
 });
 
 const AVAILABILITY_PLAN_DAY = 'availability-plan/day';
@@ -172,6 +189,8 @@ const availabilityPlan = shape({
     })
   ),
 });
+
+propTypes.availabilityPlan = availabilityPlan;
 
 const ownListingAttributes = shape({
   title: string.isRequired,
@@ -288,6 +307,22 @@ propTypes.stripeAccount = shape({
   type: propTypes.value('stripeAccount').isRequired,
   attributes: shape({
     stripeAccountId: string.isRequired,
+    stripeAccountData: object,
+  }),
+});
+
+propTypes.defaultPaymentMethod = shape({
+  id: propTypes.uuid.isRequired,
+  type: propTypes.value('stripePaymentMethod').isRequired,
+  attributes: shape({
+    type: propTypes.value('stripe-payment-method/card').isRequired,
+    stripePaymentMethodId: string.isRequired,
+    card: shape({
+      brand: string.isRequired,
+      expirationMonth: number.isRequired,
+      expirationYear: number.isRequired,
+      last4Digits: string.isRequired,
+    }).isRequired,
   }),
 });
 
@@ -297,7 +332,7 @@ export const LINE_ITEM_UNITS = 'line-item/units';
 export const LINE_ITEM_CUSTOMER_COMMISSION = 'line-item/customer-commission';
 export const LINE_ITEM_PROVIDER_COMMISSION = 'line-item/provider-commission';
 
-const LINE_ITEMS = [
+export const LINE_ITEMS = [
   LINE_ITEM_NIGHT,
   LINE_ITEM_DAY,
   LINE_ITEM_UNITS,
@@ -307,12 +342,23 @@ const LINE_ITEMS = [
 
 propTypes.bookingUnitType = oneOf([LINE_ITEM_NIGHT, LINE_ITEM_DAY, LINE_ITEM_UNITS]);
 
+const requiredLineItemPropType = (props, propName, componentName) => {
+  const prop = props[propName];
+
+  if (!prop || prop === '') {
+    return new Error(`Missing line item code prop from ${componentName}.`);
+  }
+  if (!/^line-item\/.+/.test(prop)) {
+    return new Error(`Invalid line item code value ${prop} passed to ${componentName}.`);
+  }
+};
+
 // Denormalised transaction object
 propTypes.transaction = shape({
   id: propTypes.uuid.isRequired,
   type: propTypes.value('transaction').isRequired,
   attributes: shape({
-    createdAt: instanceOf(Date).isRequired,
+    createdAt: instanceOf(Date),
     lastTransitionedAt: instanceOf(Date).isRequired,
     lastTransition: oneOf(TRANSITIONS).isRequired,
 
@@ -323,14 +369,14 @@ propTypes.transaction = shape({
 
     lineItems: arrayOf(
       shape({
-        code: oneOf(LINE_ITEMS).isRequired,
+        code: requiredLineItemPropType,
         includeFor: arrayOf(oneOf(['customer', 'provider'])).isRequired,
         quantity: instanceOf(Decimal),
         unitPrice: propTypes.money.isRequired,
         lineTotal: propTypes.money.isRequired,
         reversal: bool.isRequired,
       })
-    ).isRequired,
+    ),
     transitions: arrayOf(propTypes.transition).isRequired,
   }),
   booking: propTypes.booking,
@@ -450,5 +496,11 @@ propTypes.error = shape({
   statusText: string,
   apiErrors: arrayOf(propTypes.apiError),
 });
+
+// Options for showing just date or date and time on BookingTimeInfo and BookingBreakdown
+export const DATE_TYPE_DATE = 'date';
+export const DATE_TYPE_DATETIME = 'datetime';
+
+propTypes.dateType = oneOf([DATE_TYPE_DATE, DATE_TYPE_DATETIME]);
 
 export { propTypes };
