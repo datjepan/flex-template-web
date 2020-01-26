@@ -3,8 +3,9 @@
 .title {
   @apply --marketplaceH1FontStyles;
 
-  margin-top: 0;
+  margin: 40px auto;
   max-width: 735px;
+  text-align:center;
 
   @media (--viewportMedium) {
     margin-bottom: 23px;
@@ -25,6 +26,7 @@
 .location {
   width: 100%;
   margin-top: 25px;
+  text-align: center;
 
   /* Remove link's hover effect */
   &:hover {

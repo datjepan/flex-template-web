@@ -193,7 +193,7 @@ class SearchFiltersMobileComponent extends Component {
       onManageDisableScrolling,
       selectedFiltersCount,
       categoryFilter,
-      amenitiesFilter,
+      expertiseFilter,
       priceFilter,
       dateRangeFilter,
       keywordFilter,
@@ -235,20 +235,20 @@ class SearchFiltersMobileComponent extends Component {
       />
     ) : null;
 
-    const amenitiesLabel = intl.formatMessage({ id: 'SearchFiltersMobile.amenitiesLabel' });
+    const expertiseLabel = intl.formatMessage({ id: 'SearchFiltersMobile.expertiseLabel' });
 
-    const initialAmenities = this.initialValues(amenitiesFilter.paramName);
+    const initialexpertise = this.initialValues(expertiseFilter.paramName);
 
-    const amenitiesFilterElement = amenitiesFilter ? (
+    const expertiseFilterElement = expertiseFilter ? (
       <SelectMultipleFilter
-        id="SearchFiltersMobile.amenitiesFilter"
-        name="amenities"
-        urlParam={amenitiesFilter.paramName}
-        label={amenitiesLabel}
+        id="SearchFiltersMobile.expertiseFilter"
+        name="expertise"
+        urlParam={expertiseFilter.paramName}
+        label={expertiseLabel}
         onSubmit={this.handleSelectMultiple}
         liveEdit
-        options={amenitiesFilter.options}
-        initialValues={initialAmenities}
+        options={expertiseFilter.options}
+        initialValues={initialexpertise}
       />
     ) : null;
 
@@ -331,7 +331,7 @@ class SearchFiltersMobileComponent extends Component {
             <div className={css.filtersWrapper}>
               {keywordFilterElement}
               {categoryFilterElement}
-              {amenitiesFilterElement}
+              {expertiseFilterElement}
               {priceFilterElement}
               {dateRangeFilterElement}
             </div>
@@ -356,7 +356,7 @@ SearchFiltersMobileComponent.defaultProps = {
   selectedFiltersCount: 0,
   filterParamNames: [],
   categoryFilter: null,
-  amenitiesFilter: null,
+  expertiseFilter: null,
   priceFilter: null,
   dateRangeFilter: null,
 };
@@ -376,7 +376,7 @@ SearchFiltersMobileComponent.propTypes = {
   selectedFiltersCount: number,
   filterParamNames: array,
   categoriesFilter: propTypes.filterConfig,
-  amenitiesFilter: propTypes.filterConfig,
+  expertiseFilter: propTypes.filterConfig,
   priceFilter: propTypes.filterConfig,
   dateRangeFilter: propTypes.filterConfig,
 

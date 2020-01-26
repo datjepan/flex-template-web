@@ -165,3 +165,12 @@
   );
   max-width: 434px;
 }
+.keywordSearchFormModified {
+  width: 100%;
+  display:inline-flex;
+  position: relative;
+  border-left-style: solid;
+  border-left-width: 1px;
+  border-left-color: var(--matterColorNegative);
+
+}

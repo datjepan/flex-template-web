@@ -5,66 +5,65 @@ import classNames from 'classnames';
 
 import { NamedLink } from '../../components';
 
-import css from './SectionHowItWorks.css';
+import css from './SectionProviderhow.css';
 
-const SectionHowItWorks = props => {
+const SectionProviderhow = props => {
   const { rootClassName, className } = props;
 
   const classes = classNames(rootClassName || css.root, className);
   return (
     <div className={classes}>
       <div className={css.title}>
-        <FormattedMessage id="SectionHowItWorks.titleLineOne" /> 
+        <FormattedMessage id="SectionProviderhow.titleLineOne" />
         <br />
+        <FormattedMessage id="SectionProviderhow.titleLineTwo" />
       </div>
 
       <div className={css.steps}>
         <div className={css.step}>
           <h2 className={css.stepTitle}>
-            <FormattedMessage id="SectionHowItWorks.part1Title" />
+            <FormattedMessage id="SectionProviderhow.part1Title" />
           </h2>
           <p>
-            <FormattedMessage id="SectionHowItWorks.part1Text" />
+            <FormattedMessage id="SectionProviderhow.part1Text" />
           </p>
         </div>
 
         <div className={css.step}>
           <h2 className={css.stepTitle}>
-            <FormattedMessage id="SectionHowItWorks.part2Title" />
+            <FormattedMessage id="SectionProviderhow.part2Title" />
           </h2>
           <p>
-            <FormattedMessage id="SectionHowItWorks.part2Text" />
+            <FormattedMessage id="SectionProviderhow.part2Text" />
           </p>
         </div>
 
         <div className={css.step}>
           <h2 className={css.stepTitle}>
-            <FormattedMessage id="SectionHowItWorks.part3Title" />
+            <FormattedMessage id="SectionProviderhow.part3Title" />
           </h2>
           <p>
-            <FormattedMessage id="SectionHowItWorks.part3Text" />
+            <FormattedMessage id="SectionProviderhow.part3Text" />
           </p>
         </div>
       </div>
-	
 	  
-        <NamedLink name="SearchPage" 
-	  		className={css.getstarted}>
-          <FormattedMessage id="SectionHowItWorks.getstarted" />
+        <NamedLink name="NewListingPage" to={'l/draft/00000000-0000-0000-0000-000000000000/new/description'}
+	  		className={css.createListingLink}>
+          <FormattedMessage id="SectionProviderhow.createListingLink" />
         </NamedLink>
       
     </div>
-	  
   );
 };
 
-SectionHowItWorks.defaultProps = { rootClassName: null, className: null };
+SectionProviderhow.defaultProps = { rootClassName: null, className: null };
 
 const { string } = PropTypes;
 
-SectionHowItWorks.propTypes = {
+SectionProviderhow.propTypes = {
   rootClassName: string,
   className: string,
 };
 
-export default SectionHowItWorks;
+export default SectionProviderhow;

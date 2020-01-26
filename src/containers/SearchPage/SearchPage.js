@@ -14,7 +14,7 @@ import { parse, stringify } from '../../util/urlHelpers';
 import { propTypes } from '../../util/types';
 import { getListingsById } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/UI.duck';
-import { SearchMap, ModalInMobile, Page } from '../../components';
+import { /*SearchMap, ModalInMobile,*/ Page } from '../../components';
 import { TopbarContainer } from '../../containers';
 
 import { searchListings, searchMapListings, setActiveListing } from './SearchPage.duck';
@@ -54,13 +54,13 @@ export class SearchPageComponent extends Component {
   filters() {
     const {
       categories,
-      amenities,
+      expertise,
       priceFilterConfig,
       dateRangeFilterConfig,
       keywordFilterConfig,
     } = this.props;
 
-    // Note: "category" and "amenities" filters are not actually filtering anything by default.
+    // Note: "category" and "expertise" filters are not actually filtering anything by default.
     // Currently, if you want to use them, we need to manually configure them to be available
     // for search queries. Read more from extended data document:
     // https://www.sharetribe.com/docs/references/extended-data/#data-schema
@@ -70,9 +70,9 @@ export class SearchPageComponent extends Component {
         paramName: 'pub_category',
         options: categories,
       },
-      amenitiesFilter: {
-        paramName: 'pub_amenities',
-        options: amenities,
+      expertiseFilter: {
+        paramName: 'pub_expertise',
+        options: expertise,
       },
       priceFilter: {
         paramName: 'price',
@@ -147,14 +147,14 @@ export class SearchPageComponent extends Component {
       intl,
       listings,
       location,
-      mapListings,
+      //mapListings,
       onManageDisableScrolling,
       pagination,
       scrollingDisabled,
       searchInProgress,
       searchListingsError,
       searchParams,
-      activeListingId,
+      //activeListingId,
       onActivateListing,
     } = this.props;
     // eslint-disable-next-line no-unused-vars
@@ -176,17 +176,17 @@ export class SearchPageComponent extends Component {
 
     const validQueryParams = validURLParamsForExtendedData(searchInURL, filters);
 
-    const isWindowDefined = typeof window !== 'undefined';
+    /*const isWindowDefined = typeof window !== 'undefined';
     const isMobileLayout = isWindowDefined && window.innerWidth < MODAL_BREAKPOINT;
     const shouldShowSearchMap =
-      !isMobileLayout || (isMobileLayout && this.state.isSearchMapOpenOnMobile);
+      !isMobileLayout || (isMobileLayout && this.state.isSearchMapOpenOnMobile);*/
 
     const onMapIconClick = () => {
       this.useLocationSearchBounds = true;
       this.setState({ isSearchMapOpenOnMobile: true });
     };
 
-    const { address, bounds, origin } = searchInURL || {};
+    const { address/*, bounds, origin*/ } = searchInURL || {};
     const { title, description, schema } = createSearchResultSchema(listings, address, intl);
 
     // Set topbar class based on if a modal is open in
@@ -227,13 +227,13 @@ export class SearchPageComponent extends Component {
             showAsModalMaxWidth={MODAL_BREAKPOINT}
             primaryFilters={{
               categoryFilter: filters.categoryFilter,
-              amenitiesFilter: filters.amenitiesFilter,
+              expertiseFilter: filters.expertiseFilter,
               priceFilter: filters.priceFilter,
               dateRangeFilter: filters.dateRangeFilter,
               keywordFilter: filters.keywordFilter,
             }}
           />
-          <ModalInMobile
+         {/* <ModalInMobile
             className={css.mapPanel}
             id="SearchPage.map"
             isModalOpenOnMobile={this.state.isSearchMapOpenOnMobile}
@@ -259,7 +259,7 @@ export class SearchPageComponent extends Component {
                 />
               ) : null}
             </div>
-          </ModalInMobile>
+          </ModalInMobile>*/}
         </div>
       </Page>
     );
@@ -275,7 +275,7 @@ SearchPageComponent.defaultProps = {
   searchParams: {},
   tab: 'listings',
   categories: config.custom.categories,
-  amenities: config.custom.amenities,
+  expertise: config.custom.expertise,
   priceFilterConfig: config.custom.priceFilterConfig,
   dateRangeFilterConfig: config.custom.dateRangeFilterConfig,
   keywordFilterConfig: config.custom.keywordFilterConfig,
@@ -295,7 +295,7 @@ SearchPageComponent.propTypes = {
   searchParams: object,
   tab: oneOf(['filters', 'listings', 'map']).isRequired,
   categories: array,
-  amenities: array,
+  expertise: array,
   priceFilterConfig: shape({
     min: number.isRequired,
     max: number.isRequired,

@@ -94,21 +94,17 @@ class TopbarComponent extends Component {
     redirectToURLWithoutModalState(this.props, 'mobilesearch');
   }
 
-  handleSubmit(values) {
+   handleSubmit(values) {
     const { currentSearchParams } = this.props;
-    const { search, selectedPlace } = values.location;
+    const keywords = values.keywords;
     const { history } = this.props;
-    const { origin, bounds } = selectedPlace;
-    const originMaybe = config.sortSearchByDistance ? { origin } : {};
     const searchParams = {
       ...currentSearchParams,
-      ...originMaybe,
-      address: search,
-      bounds,
+      keywords,
     };
     history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}, searchParams));
   }
-
+	
   handleLogout() {
     const { onLogout, history } = this.props;
     onLogout().then(() => {

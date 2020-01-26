@@ -44,9 +44,9 @@
   }
 }
 
-.getstarted {
+.createListingLink {
 	@apply --marketplaceButtonStyles;
-  background-color: var(--successColorDark);
+  background-color: #4183D7;
   animation-delay: 0.8s;
   margin: 60px auto;
   width: 260px;

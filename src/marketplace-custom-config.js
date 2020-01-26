@@ -2,38 +2,18 @@
  * Marketplace specific configuration.
  */
 
-export const amenities = [
+export const expertise = [
   {
-    key: 'towels',
-    label: 'Towels',
+    key: 'skilled',
+    label: 'Skilled',
   },
   {
-    key: 'bathroom',
-    label: 'Bathroom',
+    key: 'professional',
+    label: 'Professional',
   },
   {
-    key: 'swimming_pool',
-    label: 'Swimming pool',
-  },
-  {
-    key: 'own_drinks',
-    label: 'Own drinks allowed',
-  },
-  {
-    key: 'jacuzzi',
-    label: 'Jacuzzi',
-  },
-  {
-    key: 'audiovisual_entertainment',
-    label: 'Audiovisual entertainment',
-  },
-  {
-    key: 'barbeque',
-    label: 'Barbeque',
-  },
-  {
-    key: 'own_food_allowed',
-    label: 'Own food allowed',
+    key: 'elite',
+    label: 'Elite',
   },
 ];
 

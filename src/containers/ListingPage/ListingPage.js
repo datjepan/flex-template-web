@@ -43,7 +43,6 @@ import { TopbarContainer, NotFoundPage } from '../../containers';
 
 import { sendEnquiry, loadData, setInitialValues } from './ListingPage.duck';
 import SectionImages from './SectionImages';
-import SectionAvatar from './SectionAvatar';
 import SectionHeading from './SectionHeading';
 import SectionDescriptionMaybe from './SectionDescriptionMaybe';
 import SectionFeaturesMaybe from './SectionFeaturesMaybe';
@@ -415,7 +414,7 @@ export class ListingPageComponent extends Component {
                 onManageDisableScrolling={onManageDisableScrolling}
               />
               <div className={css.contentContainer}>
-                <SectionAvatar user={currentAuthor} params={params} />
+                
                 <div className={css.mainContent}>
                   <SectionHeading
                     priceTitle={priceTitle}
@@ -429,13 +428,7 @@ export class ListingPageComponent extends Component {
                   <SectionDescriptionMaybe description={description} />
                   <SectionFeaturesMaybe options={amenitiesConfig} publicData={publicData} />
                   <SectionRulesMaybe publicData={publicData} />
-                  <SectionMapMaybe
-                    geolocation={geolocation}
-                    publicData={publicData}
-                    listingId={currentListing.id}
-                  />
-                  <SectionReviews reviews={reviews} fetchReviewsError={fetchReviewsError} />
-                  <SectionHostMaybe
+				  <SectionHostMaybe
                     title={title}
                     listing={currentListing}
                     authorDisplayName={authorDisplayName}
@@ -447,7 +440,15 @@ export class ListingPageComponent extends Component {
                     onSubmitEnquiry={this.onSubmitEnquiry}
                     currentUser={currentUser}
                     onManageDisableScrolling={onManageDisableScrolling}
+                  />	  
+				  <SectionReviews reviews={reviews} fetchReviewsError={fetchReviewsError} />
+                  <SectionMapMaybe
+                    geolocation={geolocation}
+                    publicData={publicData}
+                    listingId={currentListing.id}
                   />
+                  
+                  
                 </div>
                 <BookingPanel
                   className={css.bookingPanel}

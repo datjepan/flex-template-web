@@ -10,9 +10,9 @@
     since browsers support CSS Properties already.
  */
 
-  --LandingPage_sectionMarginTop: 40px;
-  --LandingPage_sectionMarginTopMedium: 60px;
-  --LandingPage_sectionMarginTopLarge: 94px;
+  --LandingPage_sectionMarginTop: 18px;
+  --LandingPage_sectionMarginTopMedium: 18px;
+  --LandingPage_sectionMarginTopLarge: 18px;
 }
 
 .root {
@@ -45,25 +45,86 @@
 .hero {
   flex-grow: 1;
   justify-content: flex-end;
-  padding-bottom: 32px;
+  padding-bottom: 24px;
+
+
+  @media (max-width:767px){
+    justify-content: center;
+    padding-bottom: 0;
+  }
 
   @media (--viewportMedium) {
-    padding-bottom: 83px;
+    padding-bottom: 24px;
   }
 
   @media (--viewportLarge) {
     justify-content: center;
-    padding-top: 60px;
+    align-items: center;
+    padding-top: 24px;
   }
 }
 
 .sections {
   margin: 0;
   padding-top: 1px;
-}
+  display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
 
+}
 .section {
   overflow: auto;
+
+}
+.section:nth-of-type(3) {
+  overflow: auto;
+	width: 100%;
+
+}
+.section:nth-of-type(4) {
+  overflow: auto;
+	width:100%;
+
+}
+
+.section:nth-of-type(2) {
+  /* background-color: var(--matterColorLight); */
+  border-radius: 0px;
+  width: 50%;
+  max-width: 1080px;
+	border-bottom: solid 3px #F0F0F0;
+	/*border-top: solid 3px #F0F0F0;
+	border-right: solid 3px #F0F0F0;*/
+  
+	
+	@media (max-width: 1440px){
+		width: 100%;
+		border-top: none;
+		border-right: none;
+		
+		
+		
+	}
+
+}
+
+.section:nth-of-type(1) {
+  /* background-color: var(--matterColorLight); */
+  
+	border-right: solid 3px #F0F0F0;
+	border-bottom: solid 3px #F0F0F0;
+	/*border-top: solid 3px #F0F0F0;
+	border-left: solid 3px #F0F0F0;*/
+  width: 50%;
+  max-width: 1080px;
+  
+	
+	@media (max-width: 1440px){
+		width: 100%;
+		
+		border-left: none;
+		border-right: none;
+	}
 }
 
 /* Square corners for the last section if it's even */
@@ -73,58 +134,39 @@
   }
 }
 
-/* Every other section has a light background */
-.section:nth-of-type(2n) {
-  background-color: var(--matterColorLight);
-  @media (--viewportMedium) {
-    border-radius: 4px;
+
+.marginBottomNone {
+  @media (max-width:549px){
+   
   }
 }
-
 .sectionContent {
-  margin: var(--LandingPage_sectionMarginTop) 24px 51px 24px;
+  margin: var(--LandingPage_sectionMarginTop) 24px 48px 24px;
 
   @media (--viewportMedium) {
     max-width: 100%;
-    margin: var(--LandingPage_sectionMarginTopMedium) 24px 60px 24px;
+    margin: var(--LandingPage_sectionMarginTopMedium) 24px 54px 24px;
   }
 
   @media (--viewportLarge) {
-    max-width: 1128px;
-    padding: 0 36px 0 36px;
-    margin: var(--LandingPage_sectionMarginTopLarge) auto 93px auto;
+    max-width: 90%;
+    padding: 0 36px 0 40px;
+    margin: var(--LandingPage_sectionMarginTopLarge) auto 54px auto;
   }
 
   @media (--viewportXLarge) {
-    max-width: 1056px;
+    max-width: 90%px;
     padding: 0;
   }
+
+
+
 }
 
 .sectionContentFirstChild {
   composes: sectionContent;
-  margin-top: 3vh;
+  margin-top: 1vh;
 }
 
-/* A bar on top of light sections */
-.section:nth-of-type(2n) .sectionContent::before {
-  background: var(--marketplaceColor);
-  content: '';
-  display: block;
-  width: 109px;
-  height: 6px;
 
-  /* Place the bar on top of .sectionContent top margin */
-  position: relative;
-  top: calc(-1 * var(--LandingPage_sectionMarginTop));
 
-  @media (--viewportMedium) {
-    width: 192px;
-    height: 8px;
-    top: calc(-1 * var(--LandingPage_sectionMarginTopMedium));
-  }
-
-  @media (--viewportLarge) {
-    top: calc(-1 * var(--LandingPage_sectionMarginTopLarge));
-  }
-}

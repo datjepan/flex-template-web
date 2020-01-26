@@ -68,7 +68,7 @@ const SearchFiltersComponent = props => {
     resultsCount,
     searchInProgress,
     categoryFilter,
-    amenitiesFilter,
+    expertiseFilter,
     priceFilter,
     dateRangeFilter,
     keywordFilter,
@@ -86,16 +86,16 @@ const SearchFiltersComponent = props => {
     id: 'SearchFilters.categoryLabel',
   });
 
-  const amenitiesLabel = intl.formatMessage({
-    id: 'SearchFilters.amenitiesLabel',
+  const expertiseLabel = intl.formatMessage({
+    id: 'SearchFilters.expertiseLabel',
   });
 
   const keywordLabel = intl.formatMessage({
     id: 'SearchFilters.keywordLabel',
   });
 
-  const initialAmenities = amenitiesFilter
-    ? initialValues(urlQueryParams, amenitiesFilter.paramName)
+  const initialexpertise = expertiseFilter
+    ? initialValues(urlQueryParams, expertiseFilter.paramName)
     : null;
 
   const initialCategory = categoryFilter
@@ -177,16 +177,16 @@ const SearchFiltersComponent = props => {
     />
   ) : null;
 
-  const amenitiesFilterElement = amenitiesFilter ? (
+  const expertiseFilterElement = expertiseFilter ? (
     <SelectMultipleFilter
-      id={'SearchFilters.amenitiesFilter'}
-      name="amenities"
-      urlParam={amenitiesFilter.paramName}
-      label={amenitiesLabel}
+      id={'SearchFilters.expertiseFilter'}
+      name="expertise"
+      urlParam={expertiseFilter.paramName}
+      label={expertiseLabel}
       onSubmit={handleSelectOptions}
       showAsPopup
-      options={amenitiesFilter.options}
-      initialValues={initialAmenities}
+      options={expertiseFilter.options}
+      initialValues={initialexpertise}
       contentPlacementOffset={FILTER_DROPDOWN_OFFSET}
     />
   ) : null;
@@ -250,7 +250,7 @@ const SearchFiltersComponent = props => {
     <div className={classes}>
       <div className={css.filters}>
         {categoryFilterElement}
-        {amenitiesFilterElement}
+        {expertiseFilterElement}
         {priceFilterElement}
         {dateRangeFilterElement}
         {keywordFilterElement}
@@ -286,7 +286,7 @@ SearchFiltersComponent.defaultProps = {
   resultsCount: null,
   searchingInProgress: false,
   categoryFilter: null,
-  amenitiesFilter: null,
+  expertiseFilter: null,
   priceFilter: null,
   dateRangeFilter: null,
   isSearchFiltersPanelOpen: false,
@@ -303,7 +303,7 @@ SearchFiltersComponent.propTypes = {
   searchingInProgress: bool,
   onManageDisableScrolling: func.isRequired,
   categoriesFilter: propTypes.filterConfig,
-  amenitiesFilter: propTypes.filterConfig,
+  expertiseFilter: propTypes.filterConfig,
   priceFilter: propTypes.filterConfig,
   dateRangeFilter: propTypes.filterConfig,
   isSearchFiltersPanelOpen: bool,

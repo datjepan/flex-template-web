@@ -30,7 +30,7 @@
   0% {
     visibility: hidden;
     opacity: 0;
-    top: -20px;
+    top: 0;
   }
   100% {
     visibility: visible;
@@ -45,6 +45,8 @@
   flex-direction: column;
   width: 100%;
   height: 100%;
+	text-align: center;
+
 
   /* Text positioning is done with paddings */
 }
@@ -55,7 +57,9 @@
   @media (--viewportMedium) {
     margin: 0 7.5vw 0 7.5vw;
   }
-
+ @media only screen and (min-width: 768px) and (max-width: 1024px) {
+    margin: auto;
+  }
   /* Special viewport for adjusting the heroContent's placement */
 
   @media only screen and (min-width: 1025px) and (max-width: 1366px) {
@@ -72,7 +76,9 @@
 
 .heroMainTitle {
   @apply --marketplaceHeroTitleFontStyles;
-  color: var(--matterColorLight);
+  color: var(--marketplaceColor);
+  margin: auto;
+	
 
   @apply --SectionHero_animation;
   animation-delay: 0.5s;
@@ -86,22 +92,52 @@
   @apply --marketplaceBodyFontStyles;
 
   color: var(--matterColorLight);
-  margin: 0 0 32px 0;
+
+  margin: 24px auto 32px auto;
+
 
   @apply --SectionHero_animation;
   animation-delay: 0.65s;
 
   @media (--viewportMedium) {
     max-width: var(--SectionHero_desktopTitleMaxWidth);
-    margin: 0 0 63px 0;
+    margin: 42px auto 63px auto;
+  }
+	
+}
+/* Extra Subititles
+
+.heroSubTitle2 {
+  @apply --marketplaceBodyFontStyles;
+
+  color: var(--matterColorLight);
+  margin: 0 auto 32px auto;
+
+  @apply --SectionHero_animation;
+  animation-delay: 0.65s;
+
+  @media (--viewportMedium) {
+    max-width: var(--SectionHero_desktopTitleMaxWidth);
+    margin: 0 auto 63px auto;
   }
 }
+.heroSubTitle3 {
+  @apply --marketplaceBodyFontStyles;
+
+  color: var(--matterColorLight);
+  margin: 0 auto;
+
+  @apply --SectionHero_animation;
+  animation-delay: 0.65s;
+}*/
 
 .heroButton {
   @apply --marketplaceButtonStyles;
   @apply --SectionHero_animation;
-
   animation-delay: 0.8s;
+  margin: 0 auto;
+  width: 260px;
+	line-height: 24px;
 
   @media (--viewportMedium) {
     display: block;
